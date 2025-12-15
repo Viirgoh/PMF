@@ -79,6 +79,12 @@
   gap: 12px;
 }
 
+.logo-mark {
+  height: 64px;
+  width: auto;
+  display: block;
+}
+
 .menu {
   display: flex;
   gap: 18px;

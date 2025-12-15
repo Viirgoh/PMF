@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { Link, Route, Routes, useLocation, useParams } from 'react-router-dom'
 import './App.css'
+import logoImg from './assets/Logo-Pionner-Lake-Mary.png'
 
 const programCards = [
   {
@@ -175,12 +176,9 @@ function TopBar() {
 function Nav() {
   return (
     <nav className="nav">
-      <div className="logo">
-        <div>
-          <strong>Pioneer Mortgage Funding</strong>
-          <div style={{ color: '#4a5677', fontWeight: 600 }}>Lake Mary, FL</div>
-        </div>
-      </div>
+      <Link to="/" className="logo" aria-label="Go to home">
+        <img src={logoImg} alt="Pioneer Mortgage Funding Lake Mary" className="logo-mark" />
+      </Link>
       <div className="menu">
         {navLinks.map((link) => {
           if (!link.children) {
