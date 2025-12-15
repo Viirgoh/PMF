@@ -144,7 +144,6 @@ const navLinks = [
     ],
   },
   { label: 'Programs', to: '/#programs' },
-  { label: 'Team', to: '/#team' },
   {
     label: 'Apply Now',
     to: 'https://yourkey.mymortgage-online.com/loan-app/?siteId=5842573753&lar=ahall&workFlowId=99040',
