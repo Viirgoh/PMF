@@ -371,10 +371,7 @@ function HomePage() {
               you can keep your business rolling.
             </p>
             <div className="cta-row">
-              <a
-                className="apply-btn"
-                href="https://lendinginflorida.com/qualified-homeowner-leads/"
-              >
+              <a className="apply-btn" href="mailto:jgoff@pmfmortgage.com">
                 Learn More
               </a>
               <a className="ghost-btn" href="mailto:info@lendinginflorida.com">
