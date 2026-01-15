@@ -1,18 +1,21 @@
-import { useParams } from 'react-router-dom'
-import QuotePanel from '../components/QuotePanel'
-import { teamMembers } from '../data/content'
+import { useParams } from "react-router-dom";
+import QuotePanel from "../components/QuotePanel";
+import { teamMembers } from "../data/content";
 
 function TeamProfile() {
-  const { slug } = useParams()
-  const member = teamMembers.find((m) => m.slug === slug) || teamMembers[0]
+  const { slug } = useParams();
+  const member = teamMembers.find((m) => m.slug === slug) || teamMembers[0];
 
   return (
     <>
-      <section className="profile-hero" style={{ backgroundImage: `url(${member.heroBg})` }}>
+      <section
+        className="profile-hero"
+        style={{ backgroundImage: `url(${member.heroBg})` }}
+      >
         <div className="profile-overlay" />
         <div className="profile-inner">
           <div className="profile-avatar">
-            <img src={member.image} alt={member.name} />
+            <img src={member.profileImage || member.image} alt={member.name} />
           </div>
           <h1>{member.name}</h1>
           <div className="profile-role">
@@ -38,15 +41,16 @@ function TeamProfile() {
       </section>
 
       <section className="section cta-wide">
-        <div className="eyebrow" style={{ justifyContent: 'center' }}>
+        <div className="eyebrow" style={{ justifyContent: "center" }}>
           Ready to move?
         </div>
         <h2>Don’t Miss Your Perfect House – Apply today!</h2>
         <p>
-          Pioneer Mortgage Funding, Inc. vision is to be your #1 mortgage broker nationwide. Pioneer agents are
-          committed to walking you through the home buying process — let’s see what you qualify for.
+          Pioneer Mortgage Funding, Inc. vision is to be your #1 mortgage broker
+          nationwide. Pioneer agents are committed to walking you through the
+          home buying process — let’s see what you qualify for.
         </p>
-        <div className="cta-row" style={{ justifyContent: 'center' }}>
+        <div className="cta-row" style={{ justifyContent: "center" }}>
           <a href="https://pioneermortgagefunding.my1003app.com/186207/register?time=1765892386601">
             <button className="apply-btn">Get a Quote</button>
           </a>
@@ -56,7 +60,7 @@ function TeamProfile() {
         </div>
       </section>
     </>
-  )
+  );
 }
 
-export default TeamProfile
+export default TeamProfile;

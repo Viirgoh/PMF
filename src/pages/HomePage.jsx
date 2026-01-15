@@ -1,35 +1,185 @@
-import { Link } from 'react-router-dom'
-import { programCards, steps, stats, teamMembers } from '../data/content'
+import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { programCards, steps, stats, teamMembers } from "../data/content";
+
+const heroSlides = [
+  {
+    image:
+      "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1600&q=80",
+    title: "Find the best rate for your home purchase or refinance.",
+    description:
+      "We work with 80+ different online mortgage lenders to find the best home loan offers for your home purchase or reinvestment. Our team is committed and ready to help make it easy to get you to the closing table with the best rate and in as little as 14 days.",
+  },
+  {
+    image:
+      "https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=1600&q=80",
+    title: "Find the best rate for your home purchase or refinance.",
+    description:
+      "We work with 80+ different online mortgage lenders to find the best home loan offers for your home purchase or reinvestment. Our team is committed and ready to help make it easy to get you to the closing table with the best rate and in as little as 14 days.",
+  },
+  {
+    image:
+      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1600&q=80",
+    title: "Find the best rate for your home purchase or refinance.",
+    description:
+      "We work with 80+ different online mortgage lenders to find the best home loan offers for your home purchase or reinvestment. Our team is committed and ready to help make it easy to get you to the closing table with the best rate and in as little as 14 days.",
+  },
+  {
+    image:
+      "https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=1600&q=80",
+    title: "Find the best rate for your home purchase or refinance.",
+    description:
+      "We work with 80+ different online mortgage lenders to find the best home loan offers for your home purchase or reinvestment. Our team is committed and ready to help make it easy to get you to the closing table with the best rate and in as little as 14 days.",
+  },
+  {
+    image:
+      "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1600&q=80",
+    title: "Find the best rate for your home purchase or refinance.",
+    description:
+      "We work with 80+ different online mortgage lenders to find the best home loan offers for your home purchase or reinvestment. Our team is committed and ready to help make it easy to get you to the closing table with the best rate and in as little as 14 days.",
+  },
+  {
+    image:
+      "https://images.unsplash.com/photo-1558036117-15d82a90b9b1?auto=format&fit=crop&w=1600&q=80",
+    title: "Find the best rate for your home purchase or refinance.",
+    description:
+      "We work with 80+ different online mortgage lenders to find the best home loan offers for your home purchase or reinvestment. Our team is committed and ready to help make it easy to get you to the closing table with the best rate and in as little as 14 days.",
+  },
+  {
+    image:
+      "https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?auto=format&fit=crop&w=1600&q=80",
+    title: "Find the best rate for your home purchase or refinance.",
+    description:
+      "We work with 80+ different online mortgage lenders to find the best home loan offers for your home purchase or reinvestment. Our team is committed and ready to help make it easy to get you to the closing table with the best rate and in as little as 14 days.",
+  },
+  {
+    image:
+      "https://images.unsplash.com/photo-1598228723793-52759bba239c?auto=format&fit=crop&w=1600&q=80",
+    title: "Find the best rate for your home purchase or refinance.",
+    description:
+      "We work with 80+ different online mortgage lenders to find the best home loan offers for your home purchase or reinvestment. Our team is committed and ready to help make it easy to get you to the closing table with the best rate and in as little as 14 days.",
+  },
+];
 
 function HomePage() {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [formData, setFormData] = useState({
+    name: "",
+    lastName: "",
+    email: "",
+    loanType: "",
+    creditHistory: "",
+    propertyValue: "",
+  });
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+    }, 6000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Validate required fields
+    if (
+      !formData.loanType ||
+      !formData.creditHistory ||
+      !formData.propertyValue
+    ) {
+      alert("Please fill in all required fields (*)");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    // Prepare email data
+    const emailData = {
+      ...formData,
+      submittedAt: new Date().toISOString(),
+    };
+
+    // Create email recipients list
+    const recipients = teamMembers.map((member) => member.email).join(",");
+
+    // Create mailto link with JSON data
+    const subject = encodeURIComponent("New Quote Request from Website");
+    const body = encodeURIComponent(
+      `New quote request received:\n\n${JSON.stringify(
+        emailData,
+        null,
+        2
+      )}\n\nPlease follow up with the customer.`
+    );
+
+    // Open default email client
+    window.location.href = `mailto:${recipients}?subject=${subject}&body=${body}`;
+
+    // Show success message
+    setShowSuccess(true);
+    setIsSubmitting(false);
+
+    // Reset form
+    setFormData({
+      name: "",
+      lastName: "",
+      email: "",
+      loanType: "",
+      creditHistory: "",
+      propertyValue: "",
+    });
+
+    // Hide success message after 5 seconds
+    setTimeout(() => {
+      setShowSuccess(false);
+    }, 5000);
+  };
+
   return (
     <>
       <section className="hero" id="top">
-        <div className="hero-copy">
-          <h2>Find the best rate for your home purchase or refinance.</h2>
-          <p>
-            We work with 80+ different online mortgage lenders to find the best home loan offers for your
-            home purchase or reinvestment. Our team is committed and ready to help make it easy to get you
-            to the closing table with the best rate and in as little as 14 days.
-          </p>
-          <div className="cta-row">
-            <a href="https://pioneermortgagefunding.my1003app.com/186207/register?time=1765892386601">
-              <button className="apply-btn">Get Pre-Approved</button>
-            </a>
+        {heroSlides.map((slide, index) => (
+          <div
+            key={index}
+            className={`hero-slide ${index === currentSlide ? "active" : ""}`}
+            style={{
+              backgroundImage: `linear-gradient(105deg, rgba(12, 47, 135, 0.85), rgba(47, 110, 230, 0.65)), url(${slide.image})`,
+            }}
+          >
+            <div className="hero-copy">
+              <h2>{slide.title}</h2>
+              <p>{slide.description}</p>
+              <div className="cta-row">
+                <a href="https://pioneermortgagefunding.my1003app.com/186207/register?time=1765892386601">
+                  <button className="apply-btn">Get Pre-Approved</button>
+                </a>
+              </div>
+            </div>
+            <img
+              className="hero-mark"
+              src="https://lendinginflorida.com/wp-content/uploads/2023/06/h-watewrmark-2-1024x669.png"
+              alt="Pioneer watermark"
+            />
           </div>
-        </div>
-        <img
-          className="hero-mark"
-          src="https://lendinginflorida.com/wp-content/uploads/2023/06/h-watewrmark-2-1024x669.png"
-          alt="Pioneer watermark"
-        />
+        ))}
       </section>
 
       <section className="section programs" id="programs">
         <div className="section-header">
           <div className="eyebrow">Programs</div>
           <h2>Explore popular mortgage options</h2>
-          <p>From VA to renovation loans, we can tailor financing to your next purchase or refi.</p>
+          <p>
+            From VA to renovation loans, we can tailor financing to your next
+            purchase or refi.
+          </p>
         </div>
         <div className="program-grid">
           {programCards.map((card) => (
@@ -53,7 +203,7 @@ function HomePage() {
       <section className="section" id="process">
         <div className="process-layout">
           <div className="process-hero">
-            <div className="eyebrow" style={{ color: '#ba8100' }}>
+            <div className="eyebrow" style={{ color: "#ba8100" }}>
               Our process
             </div>
             <h2>Fast &amp; easy application process</h2>
@@ -91,33 +241,58 @@ function HomePage() {
         <div className="quote-overlay" />
         <div className="quote-content">
           <div className="quote-left">
-            <div className="eyebrow" style={{ color: '#ffd369' }}>
+            <div className="eyebrow" style={{ color: "#ffd369" }}>
               Find Your Financing Options for Home Purchases &amp; Re-Financing
             </div>
             <h2>Get a Personalized Quote Today</h2>
             <p className="quote-sub">
-              Share a few details and we&apos;ll tailor a mortgage plan for you. No obligation, just clear
-              numbers.
+              Share a few details and we&apos;ll tailor a mortgage plan for you.
+              No obligation, just clear numbers.
             </p>
           </div>
 
-          <form className="quote-form">
+          <form className="quote-form" onSubmit={handleSubmit}>
             <div className="form-grid form-grid-3">
               <div className="field">
                 <label htmlFor="name">Name</label>
-                <input id="name" name="name" placeholder="First Name" />
+                <input
+                  id="name"
+                  name="name"
+                  placeholder="First Name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                />
               </div>
               <div className="field">
                 <label htmlFor="lastName">Last Name</label>
-                <input id="lastName" name="lastName" placeholder="Last Name" />
+                <input
+                  id="lastName"
+                  name="lastName"
+                  placeholder="Last Name"
+                  value={formData.lastName}
+                  onChange={handleInputChange}
+                />
               </div>
               <div className="field">
                 <label htmlFor="email">Email</label>
-                <input id="email" name="email" type="email" placeholder="Email" />
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="Email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                />
               </div>
               <div className="field">
                 <label htmlFor="loanType">Type Of Loan *</label>
-                <select id="loanType" name="loanType" defaultValue="">
+                <select
+                  id="loanType"
+                  name="loanType"
+                  value={formData.loanType}
+                  onChange={handleInputChange}
+                  required
+                >
                   <option value="" disabled>
                     Select One
                   </option>
@@ -128,7 +303,13 @@ function HomePage() {
               </div>
               <div className="field">
                 <label htmlFor="creditHistory">Credit History *</label>
-                <select id="creditHistory" name="creditHistory" defaultValue="">
+                <select
+                  id="creditHistory"
+                  name="creditHistory"
+                  value={formData.creditHistory}
+                  onChange={handleInputChange}
+                  required
+                >
                   <option value="" disabled>
                     Select One
                   </option>
@@ -140,7 +321,13 @@ function HomePage() {
               </div>
               <div className="field field-full">
                 <label htmlFor="propertyValue">Property Value *</label>
-                <select id="propertyValue" name="propertyValue" defaultValue="">
+                <select
+                  id="propertyValue"
+                  name="propertyValue"
+                  value={formData.propertyValue}
+                  onChange={handleInputChange}
+                  required
+                >
                   <option value="" disabled>
                     Select One
                   </option>
@@ -151,10 +338,14 @@ function HomePage() {
                 </select>
               </div>
             </div>
-            <button className="apply-btn" type="button">
-              Send
+            <button className="apply-btn" type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "Sending..." : "Send"}
             </button>
-            <div className="form-note success">✓ Your submission was successful.</div>
+            {showSuccess && (
+              <div className="form-note success">
+                ✓ Your submission was successful.
+              </div>
+            )}
           </form>
         </div>
       </section>
@@ -169,13 +360,15 @@ function HomePage() {
             <div className="eyebrow">Preferred Partner Program</div>
             <h2>Attention Realtors!</h2>
             <p>
-              Competition is at an all-time high, and new realtors are finding it difficult to find clients.
-              By the time a house is listed, the entire city enters a race to the finish line.
+              Competition is at an all-time high, and new realtors are finding
+              it difficult to find clients. By the time a house is listed, the
+              entire city enters a race to the finish line.
             </p>
             <p>
-              Our Preferred Partner Realtor Program is designed to help you kickstart or grow your career. Lake
-              Mary residents search for mortgage lenders every day — we can help match them with you so you can
-              keep your business rolling.
+              Our Preferred Partner Realtor Program is designed to help you
+              kickstart or grow your career. Lake Mary residents search for
+              mortgage lenders every day — we can help match them with you so
+              you can keep your business rolling.
             </p>
             <div className="cta-row">
               <a className="apply-btn" href="mailto:jgoff@pmfmortgage.com">
@@ -199,7 +392,11 @@ function HomePage() {
           {teamMembers.map((person) => (
             <div key={person.name} className="team-card">
               <Link to={`/team/${person.slug}`}>
-                <img className="team-photo" src={person.image} alt={person.name} />
+                <img
+                  className="team-photo"
+                  src={person.image}
+                  alt={person.name}
+                />
               </Link>
               <div className="content">
                 <h3>{person.name}</h3>
@@ -226,15 +423,16 @@ function HomePage() {
       </section>
 
       <section className="section cta-wide">
-        <div className="eyebrow" style={{ justifyContent: 'center' }}>
+        <div className="eyebrow" style={{ justifyContent: "center" }}>
           Ready to move?
         </div>
         <h2>Don’t Miss Your Perfect House – Apply today!</h2>
         <p>
-          Pioneer Mortgage Funding, Inc. vision is to be your #1 mortgage broker nationwide. Pioneer agents are
-          committed to walking you through the home buying process — let’s see what you qualify for.
+          Pioneer Mortgage Funding, Inc. vision is to be your #1 mortgage broker
+          nationwide. Pioneer agents are committed to walking you through the
+          home buying process — let’s see what you qualify for.
         </p>
-        <div className="cta-row" style={{ justifyContent: 'center' }}>
+        <div className="cta-row" style={{ justifyContent: "center" }}>
           <a href="https://pioneermortgagefunding.my1003app.com/186207/register?time=1765892386601">
             <button className="apply-btn">Get a Quote</button>
           </a>
@@ -244,7 +442,7 @@ function HomePage() {
         </div>
       </section>
     </>
-  )
+  );
 }
 
-export default HomePage
+export default HomePage;
