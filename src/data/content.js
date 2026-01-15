@@ -134,11 +134,10 @@ export const navLinks = [
     label: 'About us',
     to: '/about',
     children: [
-      {
-        label: 'Meet The Team',
-        to: '/#team',
-        children: teamMembers.map((m) => ({ label: m.name, to: `/team/${m.slug}` })),
-      },
+      ...teamMembers.map((member) => ({
+        label: member.name,
+        to: `/team/${member.slug}`,
+      })),
       { label: 'Privacy Policy', to: 'https://www.thryv.com/client-privacy-policy/', external: true },
     ],
   },
