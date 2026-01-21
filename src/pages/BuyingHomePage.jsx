@@ -24,8 +24,8 @@ function BuyingHomePage() {
     const loanAmount = price - down;
     const downPercent = (down / price) * 100;
 
-    // Calculate PMI if down payment is less than 20%
-    const pmi = downPercent < 20 ? (loanAmount * 0.005) / 12 : 0;
+    // Calculate PMI if down payment is less than 20% (0.55% of loan amount annually)
+    const pmi = downPercent < 20 ? (loanAmount * 0.0055) / 12 : 0;
 
     // Calculate monthly mortgage payment (P&I)
     const monthlyPayment =
