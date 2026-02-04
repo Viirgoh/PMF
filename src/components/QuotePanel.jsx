@@ -9,6 +9,7 @@ function QuotePanel({ email = "jgoff@pmfmortgage.com" }) {
     name: "",
     lastName: "",
     email: "",
+    phone: "",
     loanType: "",
     creditHistory: "",
     propertyValue: "",
@@ -53,6 +54,7 @@ function QuotePanel({ email = "jgoff@pmfmortgage.com" }) {
         from_name:
           `${formData.name} ${formData.lastName}`.trim() || "Anonymous",
         from_email: formData.email || "Not provided",
+        from_phone: formData.phone || "Not provided",
         subject: "New Quote Request from Website",
         message_json: JSON.stringify(emailData, null, 2),
         loan_type: formData.loanType,
@@ -77,6 +79,7 @@ function QuotePanel({ email = "jgoff@pmfmortgage.com" }) {
         name: "",
         lastName: "",
         email: "",
+        phone: "",
         loanType: "",
         creditHistory: "",
         propertyValue: "",
@@ -125,16 +128,29 @@ function QuotePanel({ email = "jgoff@pmfmortgage.com" }) {
             />
           </div>
         </div>
-        <div className="field">
-          <label htmlFor="q-email">Email</label>
-          <input
-            id="q-email"
-            name="email"
-            type="email"
-            placeholder="Email"
-            value={formData.email}
-            onChange={handleInputChange}
-          />
+        <div className="form-grid form-grid-2">
+          <div className="field">
+            <label htmlFor="q-email">Email</label>
+            <input
+              id="q-email"
+              name="email"
+              type="email"
+              placeholder="Email"
+              value={formData.email}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="field">
+            <label htmlFor="q-phone">Phone Number</label>
+            <input
+              id="q-phone"
+              name="phone"
+              type="tel"
+              placeholder="Phone Number"
+              value={formData.phone}
+              onChange={handleInputChange}
+            />
+          </div>
         </div>
         <div className="form-grid form-grid-2">
           <div className="field">
@@ -149,9 +165,9 @@ function QuotePanel({ email = "jgoff@pmfmortgage.com" }) {
               <option value="" disabled>
                 Select One
               </option>
-              <option value="purchase">Purchase</option>
-              <option value="refinance">Refinance</option>
-              <option value="investment">Investment / DSCR</option>
+              <option value="Purchase">Purchase</option>
+              <option value="Refinance">Refinance</option>
+              <option value="Investment">Investment / DSCR</option>
             </select>
           </div>
           <div className="field">
@@ -166,10 +182,10 @@ function QuotePanel({ email = "jgoff@pmfmortgage.com" }) {
               <option value="" disabled>
                 Select One
               </option>
-              <option value="excellent">Excellent (720+)</option>
-              <option value="good">Good (680-719)</option>
-              <option value="fair">Fair (640-679)</option>
-              <option value="improving">Building credit</option>
+              <option value="Excellent (720+)">Excellent (720+)</option>
+              <option value="Good (680-719)">Good (680-719)</option>
+              <option value="Fair (640-679)">Fair (640-679)</option>
+              <option value="Building credit">Building credit</option>
             </select>
           </div>
         </div>
@@ -185,10 +201,10 @@ function QuotePanel({ email = "jgoff@pmfmortgage.com" }) {
             <option value="" disabled>
               Select One
             </option>
-            <option value="300-500">$300,000 - $500,000</option>
-            <option value="500-750">$500,001 - $750,000</option>
-            <option value="750-1m">$750,001 - $1,000,000</option>
-            <option value="1m-plus">$1,000,001+</option>
+            <option value="$300,000 - $500,000">$300,000 - $500,000</option>
+            <option value="$500,001 - $750,000">$500,001 - $750,000</option>
+            <option value="$750,001 - $1,000,000">$750,001 - $1,000,000</option>
+            <option value="$1,000,001+">$1,000,001+</option>
           </select>
         </div>
         <button

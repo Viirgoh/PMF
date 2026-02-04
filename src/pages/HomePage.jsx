@@ -69,6 +69,7 @@ function HomePage() {
     name: "",
     lastName: "",
     email: "",
+    phone: "",
     loanType: "",
     creditHistory: "",
     propertyValue: "",
@@ -120,6 +121,7 @@ function HomePage() {
         from_name:
           `${formData.name} ${formData.lastName}`.trim() || "Anonymous",
         from_email: formData.email || "Not provided",
+        from_phone: formData.phone || "Not provided",
         subject: "New Quote Request from Website",
         message_json: JSON.stringify(emailData, null, 2),
         loan_type: formData.loanType,
@@ -144,6 +146,7 @@ function HomePage() {
         name: "",
         lastName: "",
         email: "",
+        phone: "",
         loanType: "",
         creditHistory: "",
         propertyValue: "",
@@ -294,16 +297,29 @@ function HomePage() {
                 />
               </div>
             </div>
-            <div className="field">
-              <label htmlFor="email">Email</label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="Email"
-                value={formData.email}
-                onChange={handleInputChange}
-              />
+            <div className="form-grid form-grid-2">
+              <div className="field">
+                <label htmlFor="email">Email</label>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="Email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div className="field">
+                <label htmlFor="phone">Phone Number</label>
+                <input
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  placeholder="Phone Number"
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                />
+              </div>
             </div>
             <div className="form-grid form-grid-2">
               <div className="field">

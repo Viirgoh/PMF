@@ -883,6 +883,33 @@
   font-size: 0.95rem;
 }
 
+.field select {
+  cursor: pointer;
+}
+
+.field select option {
+  background: #1a3a8a;
+  color: #ffffff;
+  padding: 10px;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.field select option:hover {
+  background: #2948b8;
+}
+
+.field select option:checked {
+  background: #2563eb;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.field select option[disabled] {
+  color: #94a3b8;
+  font-style: italic;
+}
+
 .field input::placeholder,
 .field textarea::placeholder {
   color: #d9e3ff;
