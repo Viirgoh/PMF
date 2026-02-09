@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
+import emailjs from "@emailjs/browser";
 import { programCards, steps, stats, teamMembers } from "../data/content";
+import { EMAILJS_CONFIG, getRecipientEmail } from "../utils/emailConfig";
 
 const heroSlides = [
   {
@@ -67,6 +69,7 @@ function HomePage() {
     name: "",
     lastName: "",
     email: "",
+    phone: "",
     loanType: "",
     creditHistory: "",
     propertyValue: "",
@@ -101,46 +104,66 @@ function HomePage() {
 
     setIsSubmitting(true);
 
-    // Prepare email data
-    const emailData = {
-      ...formData,
-      submittedAt: new Date().toISOString(),
-    };
+    try {
+      // Determine recipient email - Home page sends to Josh (or LUIS for testing)
+      const recipientEmail = getRecipientEmail("/");
 
-    // Create email recipients list
-    const recipients = teamMembers.map((member) => member.email).join(",");
+      // Prepare email data as JSON
+      const emailData = {
+        ...formData,
+        submittedAt: new Date().toISOString(),
+        submittedFrom: "/ (Home Page)",
+      };
 
-    // Create mailto link with JSON data
-    const subject = encodeURIComponent("New Quote Request from Website");
-    const body = encodeURIComponent(
-      `New quote request received:\n\n${JSON.stringify(
-        emailData,
-        null,
-        2
-      )}\n\nPlease follow up with the customer.`
-    );
+      // Prepare template parameters for EmailJS
+      const templateParams = {
+        to_email: recipientEmail,
+        from_name:
+          `${formData.name} ${formData.lastName}`.trim() || "Anonymous",
+        from_email: formData.email || "Not provided",
+        from_phone: formData.phone || "Not provided",
+        subject: "New Quote Request from Website",
+        message_json: JSON.stringify(emailData, null, 2),
+        loan_type: formData.loanType,
+        credit_history: formData.creditHistory,
+        property_value: formData.propertyValue,
+        page_url: window.location.href,
+      };
 
-    // Open default email client
-    window.location.href = `mailto:${recipients}?subject=${subject}&body=${body}`;
+      // Send email using EmailJS
+      await emailjs.send(
+        EMAILJS_CONFIG.serviceId,
+        EMAILJS_CONFIG.templateId,
+        templateParams,
+        EMAILJS_CONFIG.publicKey,
+      );
 
-    // Show success message
-    setShowSuccess(true);
-    setIsSubmitting(false);
+      // Show success message
+      setShowSuccess(true);
 
-    // Reset form
-    setFormData({
-      name: "",
-      lastName: "",
-      email: "",
-      loanType: "",
-      creditHistory: "",
-      propertyValue: "",
-    });
+      // Reset form
+      setFormData({
+        name: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        loanType: "",
+        creditHistory: "",
+        propertyValue: "",
+      });
 
-    // Hide success message after 5 seconds
-    setTimeout(() => {
-      setShowSuccess(false);
-    }, 5000);
+      // Hide success message after 5 seconds
+      setTimeout(() => {
+        setShowSuccess(false);
+      }, 5000);
+    } catch (error) {
+      console.error("Error sending email:", error);
+      alert(
+        "There was an error sending your request. Please try again or contact us directly.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -252,13 +275,13 @@ function HomePage() {
           </div>
 
           <form className="quote-form" onSubmit={handleSubmit}>
-            <div className="form-grid form-grid-3">
+            <div className="form-grid form-grid-2">
               <div className="field">
                 <label htmlFor="name">Name</label>
                 <input
                   id="name"
                   name="name"
-                  placeholder="First Name"
+                  placeholder="Name"
                   value={formData.name}
                   onChange={handleInputChange}
                 />
@@ -273,6 +296,8 @@ function HomePage() {
                   onChange={handleInputChange}
                 />
               </div>
+            </div>
+            <div className="form-grid form-grid-2">
               <div className="field">
                 <label htmlFor="email">Email</label>
                 <input
@@ -284,6 +309,19 @@ function HomePage() {
                   onChange={handleInputChange}
                 />
               </div>
+              <div className="field">
+                <label htmlFor="phone">Phone Number</label>
+                <input
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  placeholder="Phone Number"
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                />
+              </div>
+            </div>
+            <div className="form-grid form-grid-2">
               <div className="field">
                 <label htmlFor="loanType">Type Of Loan *</label>
                 <select
@@ -319,30 +357,46 @@ function HomePage() {
                   <option value="improving">Building credit</option>
                 </select>
               </div>
-              <div className="field field-full">
-                <label htmlFor="propertyValue">Property Value *</label>
-                <select
-                  id="propertyValue"
-                  name="propertyValue"
-                  value={formData.propertyValue}
-                  onChange={handleInputChange}
-                  required
-                >
-                  <option value="" disabled>
-                    Select One
-                  </option>
-                  <option value="300-500">$300,000 - $500,000</option>
-                  <option value="500-750">$500,001 - $750,000</option>
-                  <option value="750-1m">$750,001 - $1,000,000</option>
-                  <option value="1m-plus">$1,000,001+</option>
-                </select>
-              </div>
             </div>
-            <button className="apply-btn" type="submit" disabled={isSubmitting}>
+            <div className="field">
+              <label htmlFor="propertyValue">Property Value *</label>
+              <select
+                id="propertyValue"
+                name="propertyValue"
+                value={formData.propertyValue}
+                onChange={handleInputChange}
+                required
+              >
+                <option value="" disabled>
+                  Select One
+                </option>
+                <option value="300-500">$300,000 - $500,000</option>
+                <option value="500-750">$500,001 - $750,000</option>
+                <option value="750-1m">$750,001 - $1,000,000</option>
+                <option value="1m-plus">$1,000,001+</option>
+              </select>
+            </div>
+            <button
+              className="apply-btn full"
+              type="submit"
+              disabled={isSubmitting}
+              style={{
+                minWidth: "150px",
+                padding: "12px 32px",
+                fontSize: "16px",
+              }}
+            >
               {isSubmitting ? "Sending..." : "Send"}
             </button>
             {showSuccess && (
-              <div className="form-note success">
+              <div
+                className="form-note success"
+                style={{
+                  marginTop: "10px",
+                  color: "#4ade80",
+                  fontWeight: "600",
+                }}
+              >
                 ✓ Your submission was successful.
               </div>
             )}
